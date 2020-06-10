@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 const ipfsClient = require('ipfs-http-client')
@@ -54,11 +54,14 @@ function App() {
         <div className="row">
           <main role="main" className="col-lg-12 d-flex text-center">
             <div className="content mr-auto ml-auto">
+              <h1>Your Image</h1>
+                <p className="font-italic">This image is stored on IPFS & The Ethereum Blockchain!</p>
               <img
                 src={`https://ipfs.infura.io/ipfs/${path}`}
+                alt=""
               />
               <form onSubmit={handleSubmit} >
-                <h2 className="mt-5 mb-5" >Upload to IPFS</h2>
+                <h2 className="mt-5 mb-5" >Upload Image to IPFS</h2>
                   <input className="ml-5" type="file" onChange={captureFile} />
               </form>
               <div>
