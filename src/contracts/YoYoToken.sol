@@ -13,6 +13,7 @@ contract YoYoToken is ERC721PresetMinterPauserAutoId, Ownable {
   }
 
   function exists(uint256 tokenId) public view returns (bool) {
-    super._exists(tokenId);
+    return _exists(tokenId);
   }
+
 }
