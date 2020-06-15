@@ -1,20 +1,58 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from 'react'
+import Web3 from 'web3'
+import YoYoToken from '../abis/YoYoToken'
+import ImageDisplay from './ImageDisplay'
+import Nav from './Nav'
+import Loading from './Loading'
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 class App extends Component {
 
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
+
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    }
+    if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.web3
+    // Load account
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+    const networkId = await web3.eth.net.getId()
+    const networkData = YoYoToken.networks[networkId]
+    if(networkData) {
+      const contract = web3.eth.Contract(YoYoToken.abi, networkData.address)
+      this.setState({ contract })
+    } else {
+      window.alert('Smart contract not deployed to detected network.')
+    }
+  }
+
   constructor(props) {
     super(props)
 
     this.state = {
-      memeHash: "QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV",
+      imageHash: ["QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV"],
       contract: null,
       web3: null,
       buffer: null,
-      account: null
+      account: '',
+      loading: false
     }
   }
 
@@ -25,11 +63,24 @@ class App extends Component {
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
       this.setState({ buffer: Buffer(reader.result) })
+      console.log(this.state.buffer)
     }
+  }
+
+  // Seems to work. Should use this to push token IDs to state
+  getLastId = async () => {
+    const nfts = await this.state.contract.methods.totalSupply().call()
+    const lastNft = await this.state.contract.methods.tokenByIndex(nfts - 1).call()
+    console.log(lastNft.toString())
+    return lastNft
   }
 
   onSubmit = async (event) => {
     event.preventDefault()
+    const { imageHash, loading } = this.state
+    this.setState({
+      loading: true
+    })
     const source = ipfs.add(
       this.state.buffer,
       {
@@ -38,72 +89,54 @@ class App extends Component {
     )
     try {
       for await (const file of source) {
-        console.log(file)
-        this.setState({ memeHash: file.path })
+        this.setState({
+          imageHash: [...imageHash, file.path],
+        })
+        console.log(imageHash)
+        // this.state.contract.methods.mint(this.state.account).send({ from: this.state.account })
+        // // Use getLastId to get tokenId to setTokenURI
+        // const id = await this.state.contract.methods.exists(this.getLastId).call()
+        // console.log(id)
+        this.setState({
+          loading: false
+        })
       }
     }  catch (err) {
           console.error(err)
       }
   }
 
-  // async (event) => {
-  //   event.preventDefault()
-  //   console.log("Submitting file to ipfs...")
-  //   await ipfs.add(this.state.buffer, (error, result) => {
-  //     console.log('Ipfs result', result)
-  //     if(error) {
-  //       console.log(error)
-  //       return
-  //     }
-  //   })
-  // }
+  render () {
+    const { imageHash, account, loading } = this.state;
+    if(loading) {
+      return <Loading account={account} />
+    } else {
+      return (
+        <div>
+          <Nav account={account} />
+          <div className="container-fluid mt-5">
 
-  render() {
-    return (
-      <div>
-        <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-          <span
-            className="navbar-brand col-sm-3 col-md-2 mr-0"
-          >
-            NFT Gallery
-          </span>
-        </nav>
+            <div className="container-fluid text-center">
+              <h2 className="mt-5 mb-5">Upload Image to IPFS</h2>
+              <form onSubmit={this.onSubmit} >
+                <input type="file" onChange={this.captureFile} />
+                <input type='submit'className="btn btn-primary" />
+              </form>
+            </div>
 
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex text-center">
-              <div className="content mr-auto ml-auto">
-                <h1>Your Image</h1>
-                  <p className="font-italic">This image is stored on IPFS & The Ethereum Blockchain!</p>
-                <div className="container-fluid">
-                  <img
-                    className="w-75 h-75"
-                    src={`https://ipfs.infura.io/ipfs/${this.state.memeHash}`}
-                    alt=""
-                  />
-                </div>
-                <h2 className="mt-5 mb-5" >Upload Image to IPFS</h2>
-                <form onSubmit={this.onSubmit} >
-                  <input type="file" onChange={this.captureFile} />
-                  <input type='submit'/>
-                </form>
-                <div>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`https://ipfs.infura.io/ipfs/${this.state.memeHash}`}
-                  >
-                      IPFS Link Here
-                  </a>
-                </div>
-              </div>
-            </main>
+            <div className="container-fluid w-50 h-50">
+              {imageHash.map((image, index) => {
+                return <ImageDisplay image={image} key={index} id={index} />
+              })}
+            </div>
+
+
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
+  }
 }
 
-export default App;
+export default App
