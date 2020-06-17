@@ -1,1 +1,24 @@
-/* Styles go here */
+div.gallery {
+    margin: 5px;
+    width: 200px;
+    height: 250px;
+    border: 1px solid #ccc;
+    float: left;    
+}
+
+div.gallery:hover {
+    border: 1px solid #777;
+  }
+
+div.gallery img {
+    width: 100%;
+    height: 50%;
+  }
+
+div.desc {
+    display: block;
+    padding: 20px;
+    padding-bottom: 30px;
+    text-align: center;
+    text-decoration: black;
+  }

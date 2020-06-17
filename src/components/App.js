@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Web3 from 'web3'
+import './App.css'
 import YoYoToken from '../abis/YoYoToken'
 import ImageDisplay from './ImageDisplay'
 import Nav from './Nav'
@@ -9,6 +10,21 @@ const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.captureFile = this.captureFile.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+
+    this.state = {
+      imageHash: [],
+      contract: null,
+      web3: null,
+      buffer: null,
+      account: '',
+      loading: false
+    }
+  }
 
   async componentWillMount() {
     await this.loadWeb3()
@@ -35,24 +51,11 @@ class App extends Component {
     this.setState({ account: accounts[0] })
     const networkId = await web3.eth.net.getId()
     const networkData = YoYoToken.networks[networkId]
-    if(networkData) {
+    if (networkData) {
       const contract = web3.eth.Contract(YoYoToken.abi, networkData.address)
       this.setState({ contract })
     } else {
       window.alert('Smart contract not deployed to detected network.')
-    }
-  }
-
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      imageHash: ["QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV"],
-      contract: null,
-      web3: null,
-      buffer: null,
-      account: '',
-      loading: false
     }
   }
 
@@ -67,7 +70,7 @@ class App extends Component {
     }
   }
 
-  // Seems to work. Should use this to push token IDs to state
+  // Seems to work. Bind in constructor? Should use this to push token IDs to a state array.
   getLastId = async () => {
     const nfts = await this.state.contract.methods.totalSupply().call()
     const lastNft = await this.state.contract.methods.tokenByIndex(nfts - 1).call()
@@ -84,7 +87,7 @@ class App extends Component {
     const source = ipfs.add(
       this.state.buffer,
       {
-          progress: (prog) => console.log(`received: ${prog}`)
+        progress: (prog) => console.log(`received: ${prog}`)
       }
     )
     try {
@@ -101,37 +104,46 @@ class App extends Component {
           loading: false
         })
       }
-    }  catch (err) {
-          console.error(err)
-      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-  render () {
+  render() {
     const { imageHash, account, loading } = this.state;
-    if(loading) {
+
+    let image = imageHash.map((image, index) => {
+      return (
+        <div key={index} className="col-md-3 mb-3">
+          <ImageDisplay image={image} id={index} />
+        </div>)
+    })
+
+    if (loading) {
       return <Loading account={account} />
-    } else {
+    }
+    else {
       return (
         <div>
           <Nav account={account} />
-          <div className="container-fluid mt-5">
-
-            <div className="container-fluid text-center">
-              <h2 className="mt-5 mb-5">Upload Image to IPFS</h2>
-              <form onSubmit={this.onSubmit} >
-                <input type="file" onChange={this.captureFile} />
-                <input type='submit'className="btn btn-primary" />
-              </form>
-            </div>
-
-            <div className="container-fluid w-50 h-50">
-              {imageHash.map((image, index) => {
-                return <ImageDisplay image={image} key={index} id={index} />
-              })}
-            </div>
 
 
+          <div className="container-fluid text-center">
+            <h2 className="mt-5 mb-5">Upload Image to IPFS</h2>
+            <form onSubmit={this.onSubmit} >
+              <input type="file" onChange={this.captureFile} />
+              <input type='submit' className="btn btn-primary" />
+            </form>
           </div>
+
+          <div className="container-fluid mt-5">
+            <div className="row text-center">
+              {image}
+            </div>           
+          </div>
+          
+
+
         </div>
       );
     }
