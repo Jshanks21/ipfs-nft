@@ -15,9 +15,11 @@ class App extends Component {
     super(props)
     this.captureFile = this.captureFile.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+    //this.mint = this.mint.bind(this)
 
     this.state = {
       imageHash: [],
+      tokenHash: [],
       contract: null,
       web3: null,
       buffer: null,
@@ -52,8 +54,8 @@ class App extends Component {
     const networkId = await web3.eth.net.getId()
     const networkData = YoYoToken.networks[networkId]
     if (networkData) {
-      const contract = web3.eth.Contract(YoYoToken.abi, networkData.address)
-      this.setState({ contract })
+      const contract = new web3.eth.Contract(YoYoToken.abi, networkData.address)
+      this.setState({ contract: contract })
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
@@ -76,11 +78,21 @@ class App extends Component {
     const lastNft = await this.state.contract.methods.tokenByIndex(nfts - 1).call()
     console.log(lastNft.toString())
     return lastNft
+  } 
+
+  mint = async (ipfsHash) => {
+    const { account, contract, tokenHash } = this.state 
+    contract.methods.mint(ipfsHash).send({ from: account, gas: 5000000, gasPrice: window.web3.utils.toWei('10', 'gwei') })
+    .once('receipt', (receipt) => {
+      this.setState({
+        tokenHash: [...tokenHash, ipfsHash]
+      })
+    })    
   }
 
   onSubmit = async (event) => {
     event.preventDefault()
-    const { imageHash, loading } = this.state
+    const { imageHash } = this.state
     this.setState({
       loading: true
     })
@@ -96,10 +108,6 @@ class App extends Component {
           imageHash: [...imageHash, file.path],
         })
         console.log(imageHash)
-        // this.state.contract.methods.mint(this.state.account).send({ from: this.state.account })
-        // // Use getLastId to get tokenId to setTokenURI
-        // const id = await this.state.contract.methods.exists(this.getLastId).call()
-        // console.log(id)
         this.setState({
           loading: false
         })
@@ -135,6 +143,25 @@ class App extends Component {
               <input type='submit' className="btn btn-primary" />
             </form>
           </div>
+          <hr />
+
+          <div className="container-fluid text-center">
+            <h2 className="mt-5 mb-5">Mint Token</h2>
+            <form onSubmit={(event) => {
+              event.preventDefault()
+              const ipfsHash = this.ipfsHash.value
+              this.mint(ipfsHash)
+              }}>
+              <input 
+                type="text" 
+                className="mr-5" 
+                placeholder="e.g. QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV" 
+                ref={(input) => { this.ipfsHash = input }} 
+              />
+              <input type='submit' className="ml-5 btn btn-primary" />
+            </form>
+          </div>
+          <hr/>
 
           <div className="container-fluid mt-5">
             <div className="row text-center">
