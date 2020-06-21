@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "bbb8cea93ce01881ac87",
+    "revision": "8f3488ca3544dd314e14",
     "url": "/ipfs-nft/static/css/main.ed57285a.chunk.css"
   },
   {
-    "revision": "bbb8cea93ce01881ac87",
-    "url": "/ipfs-nft/static/js/main.bbb8cea9.chunk.js"
+    "revision": "8f3488ca3544dd314e14",
+    "url": "/ipfs-nft/static/js/main.8f3488ca.chunk.js"
   },
   {
     "revision": "7a9c4fc1f7c42d9ba827",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/ipfs-nft/static/js/runtime~main.42f59e0e.js"
   },
   {
-    "revision": "017c765b3ca41f32e38b2fe324047e5c",
+    "revision": "8c43b6e3898f3a3aae6ffd83a4b8d891",
     "url": "/ipfs-nft/index.html"
   }
 ];
