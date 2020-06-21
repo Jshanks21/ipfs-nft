@@ -198,6 +198,7 @@ class App extends Component {
               ref={(input) => { this.ipfsHash = input }} 
             />
             <input type='submit' className="ml-5 btn btn-primary" />
+            <div>YoYoYoToken contract address is at 0x46C9362fDbFB29f8E0bf2C38F11A73f792379E22 on the <a href="https://ropsten.etherscan.io/address/0x46c9362fdbfb29f8e0bf2c38f11a73f792379e22" target="_blank" rel="noopener noreferrer">Ropsten testnet.</a></div>
           </form>
         </div>
         <hr/>
