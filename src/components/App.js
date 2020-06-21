@@ -100,8 +100,8 @@ class App extends Component {
   // }
 
   mint = async (ipfsHash) => {
-    const { account, contract, web3 } = this.state 
-    await contract.methods.mint(ipfsHash).send({ from: account, gas: 5000000, gasPrice: web3.utils.toWei('30', 'gwei') })
+    const { account, web3 } = this.state 
+    await this.state.contract.methods.mint(ipfsHash).send({ from: account, gas: 5000000, gasPrice: web3.utils.toWei('30', 'gwei') })
     .once('receipt', (receipt) => {
       window.location.reload(true)
     })
@@ -162,8 +162,8 @@ class App extends Component {
 
         <div className="container-fluid text-center">
         <h2 className="float-left">1</h2>
-          <h2 className="mt-5 mb-5">Upload Image to IPFS</h2>
-          <small>Live on Ropsten testnet.</small>
+          <h2 className="mt-5">Upload Image to IPFS</h2>
+          <small className="text-center mb-5">Live on Ropsten testnet.</small>
           <form onSubmit={this.onSubmit} >
             <input type="file" onChange={this.captureFile} />
             <input type='submit' className="btn btn-primary" />
