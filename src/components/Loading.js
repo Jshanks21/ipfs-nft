@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Spinner from 'react-bootstrap/Spinner'
 import Nav from './Nav'
 
 class Loading extends Component {
@@ -7,8 +8,9 @@ class Loading extends Component {
     return (
       <div>
         <Nav account={account} />
-        <div className="container-fluid text-center mt-5">
-          <h2>Loading...</h2>
+        <div className="text-center loader">
+          {<Spinner animation="border" variant="primary" />}
+          <h2>Uploading to IPFS...</h2>
         </div>
       </div>
     )

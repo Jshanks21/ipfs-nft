@@ -13,13 +13,9 @@ contract YoYoToken is ERC721PresetMinterPauserAutoId, Ownable {
         )
     {}
 
-    function mint(string memory ipfsHash) public onlyOwner {
+    function mint(string memory ipfsHash) public {
         uint256 _id = totalSupply();
         _mint(msg.sender, _id);
         _setTokenURI(_id, ipfsHash);
-    }
-
-    function exists(uint256 tokenId) public view returns (bool) {
-        return _exists(tokenId);
     }
 }

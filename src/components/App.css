@@ -1,7 +1,7 @@
 div.gallery {
     margin: 5px;
     width: 200px;
-    height: 250px;
+    height: 280px;
     border: 1px solid #ccc;
     float: left;    
 }
@@ -17,8 +17,16 @@ div.gallery img {
 
 div.desc {
     display: block;
-    padding: 20px;
-    padding-bottom: 30px;
+    padding: 10px;    
     text-align: center;
-    text-decoration: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+div.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+}

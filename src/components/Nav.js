@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Identicon from 'identicon.js';
 
 class Nav extends Component {
   render () {
@@ -13,7 +14,17 @@ class Nav extends Component {
           </span>
           <ul className="navbar-nav px-3">
             <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
-              <small className="text-white">{account}</small>
+              { this.props.account
+                ? <img
+                    className="ml-2"
+                    height="30"
+                    width="30"
+                    src={`data:image/png;base64,${new Identicon(account, 30).toString()}`}
+                    alt=""
+                  />
+                : <span></span>
+              }
+              <small className="text-white ml-2">{account}</small>
             </li>
           </ul>
         </nav>
