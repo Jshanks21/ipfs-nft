@@ -1,15 +1,15 @@
 {
   "main.css": "/ipfs-nft/static/css/main.ed57285a.chunk.css",
-  "main.js": "/ipfs-nft/static/js/main.8f3488ca.chunk.js",
-  "main.js.map": "/ipfs-nft/static/js/main.8f3488ca.chunk.js.map",
+  "main.js": "/ipfs-nft/static/js/main.9a27aa19.chunk.js",
+  "main.js.map": "/ipfs-nft/static/js/main.9a27aa19.chunk.js.map",
   "static/css/1.6b47bcc0.chunk.css": "/ipfs-nft/static/css/1.6b47bcc0.chunk.css",
   "static/js/1.7a9c4fc1.chunk.js": "/ipfs-nft/static/js/1.7a9c4fc1.chunk.js",
   "static/js/1.7a9c4fc1.chunk.js.map": "/ipfs-nft/static/js/1.7a9c4fc1.chunk.js.map",
   "runtime~main.js": "/ipfs-nft/static/js/runtime~main.42f59e0e.js",
   "runtime~main.js.map": "/ipfs-nft/static/js/runtime~main.42f59e0e.js.map",
-  "static/css/1.6b47bcc0.chunk.css.map": "/ipfs-nft/static/css/1.6b47bcc0.chunk.css.map",
   "static/css/main.ed57285a.chunk.css.map": "/ipfs-nft/static/css/main.ed57285a.chunk.css.map",
+  "static/css/1.6b47bcc0.chunk.css.map": "/ipfs-nft/static/css/1.6b47bcc0.chunk.css.map",
   "index.html": "/ipfs-nft/index.html",
-  "precache-manifest.40242463a4e5d1dd772f41fb23b99ac3.js": "/ipfs-nft/precache-manifest.40242463a4e5d1dd772f41fb23b99ac3.js",
+  "precache-manifest.2e15bae46c3a8a946a9b53d3f992c433.js": "/ipfs-nft/precache-manifest.2e15bae46c3a8a946a9b53d3f992c433.js",
   "service-worker.js": "/ipfs-nft/service-worker.js"
 }
