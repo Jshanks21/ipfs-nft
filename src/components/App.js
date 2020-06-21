@@ -163,7 +163,9 @@ class App extends Component {
         <div className="container-fluid text-center">
         <h2 className="float-left">1</h2>
           <h2 className="mt-5">Upload Image to IPFS</h2>
-          <small className="text-center mb-5">Live on Ropsten testnet.</small>
+          <div className="text-center mb-5 alert alert-warning">
+            <span>Live on Ropsten testnet.</span>
+          </div>
           <form onSubmit={this.onSubmit} >
             <input type="file" onChange={this.captureFile} />
             <input type='submit' className="btn btn-primary" />
