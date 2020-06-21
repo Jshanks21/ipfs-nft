@@ -15,7 +15,6 @@ class App extends Component {
     super(props)
     this.captureFile = this.captureFile.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    //this.mint = this.mint.bind(this)
 
     this.state = {
       imageHash: [],
@@ -72,7 +71,6 @@ class App extends Component {
     }
   }
 
-  // Seems to work. Bind in constructor? Should use this to push token IDs to a state array.
   getLastId = async () => {
     const nfts = await this.state.contract.methods.totalSupply().call()
     const lastNft = await this.state.contract.methods.tokenByIndex(nfts - 1).call()
@@ -168,9 +166,6 @@ class App extends Component {
               {image}
             </div>           
           </div>
-          
-
-
         </div>
       );
     }
