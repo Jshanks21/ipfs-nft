@@ -15,6 +15,7 @@
     "bootstrap": "4.3.1",
     "dapparatus": "^1.0.96",
     "dotenv": "^8.2.0",
+    "gh-pages": "^3.1.0",
     "identicon.js": "^2.3.3",
     "ipfs-http-client": "^44.2.0",
     "react": "16.8.4",
@@ -25,7 +26,10 @@
     "truffle": "5.1.14",
     "web3": "^1.2.9"
   },
+  "homepage": "https://jshanks21.github.io/ipfs-nft/",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
