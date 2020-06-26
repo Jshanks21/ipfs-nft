@@ -85,20 +85,6 @@ class App extends Component {
     }
   }
 
-  // getLastId = async () => {
-  //   const nfts = await this.state.contract.methods.totalSupply().call()
-  //   const lastNft = await this.state.contract.methods.tokenByIndex(nfts - 1).call()
-  //   return lastNft
-  // } 
-
-  // setTokenID = async () => {
-  //   const { totalSupply, contract } = this.state
-  //   for(let i = 1; i <= totalSupply; i++) {
-  //     const id = await contract.methods.tokenByIndex(i - 1).call()
-  //     this.setState({ tokenID: [...tokenID, id]})
-  //   }
-  // }
-
   mint = async (ipfsHash) => {
     const { account, web3 } = this.state 
     await this.state.contract.methods.mint(ipfsHash).send({ from: account, gas: 5000000, gasPrice: web3.utils.toWei('30', 'gwei') })
@@ -149,73 +135,68 @@ class App extends Component {
 
     if (loading) {
       return <Loading account={account} />
-    }
-
-    if (!this.loadBlockchainData) {
-      return <div>Error connecting to blockchain...</div>      
-    }
-
-    return (
-      <div>
-        <Nav account={account} />
-
-
-        <div className="container-fluid text-center">
-        <h2 className="float-left">1</h2>
-          <h2 className="mt-5">Upload Image to IPFS</h2>
-          <div className="text-center mb-5">
-            <span>Live on <strong>Ropsten</strong> testnet.</span>
+    } else {
+      return (
+        <div>
+          <Nav account={account} />
+  
+  
+          <div className="container-fluid text-center">
+          <h2 className="float-left">1</h2>
+            <h2 className="mt-5">Upload Image to IPFS</h2>
+            <div className="text-center mb-5">
+              <span>Live on <strong>Ropsten</strong> testnet.</span>
+            </div>
+            <form onSubmit={this.onSubmit} >
+              <input type="file" onChange={this.captureFile} />
+              <input type='submit' className="btn btn-primary" />
+              <MintTokenInput imageHash={imageHash}/>
+            </form>
           </div>
-          <form onSubmit={this.onSubmit} >
-            <input type="file" onChange={this.captureFile} />
-            <input type='submit' className="btn btn-primary" />
-            <MintTokenInput imageHash={imageHash}/>
-          </form>
+          <hr />
+  
+          <div className="container-fluid text-center">
+          <h2 className="float-left">2</h2>
+            <h2 className="mt-5">Mint Token</h2>
+            <span>
+              Get your test Ether
+              <a href="https://faucet.metamask.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                &nbsp;here.
+              </a>
+            </span>
+            <form className="mt-5" onSubmit={(event) => {
+              event.preventDefault()
+              const ipfsHash = this.ipfsHash.value
+              this.mint(ipfsHash)
+              }}>
+              <input 
+                type="text" 
+                className="mr-5" 
+                placeholder="e.g. QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV" 
+                ref={(input) => { this.ipfsHash = input }} 
+              />
+              <input type='submit' className="ml-5 btn btn-primary" />
+              <div>YoYoYoToken contract address is at 0x46C9362fDbFB29f8E0bf2C38F11A73f792379E22 on the <a href="https://ropsten.etherscan.io/address/0x46c9362fdbfb29f8e0bf2c38f11a73f792379e22" target="_blank" rel="noopener noreferrer">Ropsten testnet.</a></div>
+            </form>
+          </div>
+          <hr/>
+  
+          <div className="container-fluid mt-5">
+            <h2 className="float-left">3</h2>
+            <h2 className="text-center">Enjoy Your Collection</h2>
+            <div className="row text-center">
+              {image}
+            </div>           
+          </div>
+          
+  
+  
         </div>
-        <hr />
-
-        <div className="container-fluid text-center">
-        <h2 className="float-left">2</h2>
-          <h2 className="mt-5">Mint Token</h2>
-          <span>
-            Get your test Ether
-            <a href="https://faucet.metamask.io/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >
-              &nbsp;here.
-            </a>
-          </span>
-          <form className="mt-5" onSubmit={(event) => {
-            event.preventDefault()
-            const ipfsHash = this.ipfsHash.value
-            this.mint(ipfsHash)
-            }}>
-            <input 
-              type="text" 
-              className="mr-5" 
-              placeholder="e.g. QmSVPV4ccnNiz65PmPZt76pfpGZza6mK7Czh5sxyFzGxoV" 
-              ref={(input) => { this.ipfsHash = input }} 
-            />
-            <input type='submit' className="ml-5 btn btn-primary" />
-            <div>YoYoYoToken contract address is at 0x46C9362fDbFB29f8E0bf2C38F11A73f792379E22 on the <a href="https://ropsten.etherscan.io/address/0x46c9362fdbfb29f8e0bf2c38f11a73f792379e22" target="_blank" rel="noopener noreferrer">Ropsten testnet.</a></div>
-          </form>
-        </div>
-        <hr/>
-
-        <div className="container-fluid mt-5">
-          <h2 className="float-left">3</h2>
-          <h2 className="text-center">Enjoy Your Collection</h2>
-          <div className="row text-center">
-            {image}
-          </div>           
-        </div>
-        
-
-
-      </div>
-    );
-    
+      );
+    }    
 
   }
 }
